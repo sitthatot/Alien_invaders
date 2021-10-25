@@ -59,7 +59,7 @@ private:
 public:
 	Game();
 	virtual ~Game();
-
+	
 	//Functions
 	void run();
 	void updateMousePositions();

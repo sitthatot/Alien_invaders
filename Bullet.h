@@ -12,10 +12,11 @@ private:
 
 	sf::Vector2f direction;
 	float movementSpeed;
+	float angle;
 
 public:
 	Bullet();
-	Bullet(sf::Texture* texture, float pos_x, float pos_y, float dir_x, float dir_y, float movement_speed);
+	Bullet(sf::Texture* texture, float pos_x, float pos_y, float dir_x, float dir_y, float movement_speed, float playerAngle);
 	virtual ~Bullet();
 
 	//Accessor

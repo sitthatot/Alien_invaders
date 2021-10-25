@@ -83,10 +83,11 @@ void Game::initSystems()
 void Game::initPlayer()
 {
 	this->player = new Player();
+	this->player->setPosition(500.f, 350.f);
 }
 
 void Game::initEnemies()
-{
+{//Spawn enemy
 	this->spawnTimerMax = 50.f;
 	this->spawnTimer = this->spawnTimerMax;
 }
@@ -157,25 +158,27 @@ void Game::updatePollEvents()
 void Game::updateInput()
 {
 	//Move player
+	this->player->move(0.f, 0.f, mousePosView);
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
-		this->player->move(-1.f, 0.f);
+		this->player->move(-1.f, 0.f, mousePosView);
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-		this->player->move(1.f, 0.f);
+		this->player->move(1.f, 0.f, mousePosView);
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
-		this->player->move(0.f, -1.f);
+		this->player->move(0.f, -1.f, mousePosView);
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
-		this->player->move(0.f, 1.f);
+		this->player->move(0.f, 1.f, mousePosView);
 
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && this->player->canAttack())
 	{
 		this->bullets.push_back(
 			new Bullet(
 				this->textures["BULLET"],
-				this->player->getPos().x + this->player->getBounds().width / 8.f,
-				this->player->getPos().y,
-				0.f,//sf::Mouse::getPosition(*this->window).x,//dirx
-				-1.f,//sf::Mouse::getPosition(*this->window).y,//dir_y
-				5.f//movement speed
+				this->player->getPos().x - 30,
+				this->player->getPos().y - 30,
+				1.f,//sf::Mouse::getPosition(*this->window).x,//dirx
+				1.f,//sf::Mouse::getPosition(*this->window).y,//dir_y
+				5.f,//movement speed
+				this->player->getAngle()
 			)
 		);
 	}
@@ -265,6 +268,7 @@ void Game::updateEnemies()
 			//Delete enemy
 			delete this->enemies.at(counter);
 			this->enemies.erase(this->enemies.begin() + counter);
+			break;
 		}
 		//Enemy player collision
 		else if (enemy->getBounds().intersects(this->player->getBounds()))
@@ -272,6 +276,7 @@ void Game::updateEnemies()
 			this->player->loseHp(this->enemies.at(counter)->getDamage());
 			delete this->enemies.at(counter);
 			this->enemies.erase(this->enemies.begin() + counter);
+			break;
 		}
 
 		++counter;
@@ -318,6 +323,8 @@ void Game::update()
 	this->updateGUI();
 
 	this->updateWorld();
+
+	this->mousePosView = sf::Vector2f(sf::Mouse::getPosition(*window));
 
 	std::cout << sf::Mouse::getPosition().x << " " << sf::Mouse::getPosition().y << "\n";
 }

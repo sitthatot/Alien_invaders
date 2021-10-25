@@ -11,10 +11,12 @@ private:
 	sf::Texture texture;
 
 	float movementSpeed;
-
+	float playerAngle;
 	float attackCooldown;
 	float attackCooldownMax;
-
+	//position
+	sf::Vector2f player_position;
+	sf::Vector2f mouse_distance;
 	int hp;
 	int hpMax;
 
@@ -30,6 +32,7 @@ public:
 	//Accessor
 	const sf::Vector2f& getPos() const;
 	const sf::FloatRect getBounds() const;
+	float& getAngle();
 	const int& getHp() const;
 	const int& getHpMax() const;
 
@@ -40,7 +43,7 @@ public:
 	void loseHp(const int value);
 
 	//Functions
-	void move(const float dirX, const float dirY);
+	void move(const float dirX, const float dirY, sf::Vector2f mousePosView);
 	const bool canAttack();
 
 	void updateAttack();

@@ -3,7 +3,7 @@
 void Player::initVariables()
 {
 	this->movementSpeed = 2.f;
-
+	this->playerAngle = 0.f;
 	this->attackCooldownMax = 5.f;
 	this->attackCooldown = this->attackCooldownMax;
 
@@ -29,6 +29,10 @@ void Player::initSprite()
 
 	//Resize the sprite
 	this->sprite.scale(3.f, 3.f);
+	this->sprite.setOrigin(sf::Vector2f(
+		this->sprite.getLocalBounds().width / 2,
+		this->sprite.getLocalBounds().height / 2)
+	);
 }
 
 Player::Player()
@@ -51,6 +55,11 @@ const sf::Vector2f& Player::getPos() const
 const sf::FloatRect Player::getBounds() const
 {
 	return this->sprite.getGlobalBounds();
+}
+
+float& Player::getAngle()
+{
+	return this->playerAngle;
 }
 
 const int& Player::getHp() const
@@ -85,9 +94,16 @@ void Player::loseHp(const int value)
 		this->hp = 0;
 }
 
-void Player::move(const float dirX, const float dirY)
+void Player::move(const float dirX, const float dirY, sf::Vector2f mousePosView)
 {
 	this->sprite.move(this->movementSpeed * dirX, this->movementSpeed * dirY);
+	//Rotation
+	this->mouse_distance = mousePosView - player_position;
+	if (mouse_distance.y < 0)
+		this->playerAngle = -atanf(mouse_distance.x / mouse_distance.y) * 180.0 / 3.141592;
+	else
+		this->playerAngle = 180 + -atanf(mouse_distance.x / mouse_distance.y) * 180.0 / 3.141592;
+	this->sprite.setRotation(this->playerAngle);
 }
 
 const bool Player::canAttack()
@@ -111,6 +127,7 @@ void Player::updateAttack()
 void Player::update()
 {
 	this->updateAttack();
+	this->player_position = sprite.getPosition();
 }
 
 void Player::render(sf::RenderTarget& target)
