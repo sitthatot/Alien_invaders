@@ -2,10 +2,15 @@
 #define ENEMY_H
 
 #include<SFML/Graphics.hpp>
+#include<SFML/System.hpp>
+#include<iostream>
 
 class Enemy
 {
 private:
+	sf::Sprite sprite;
+	sf::Texture texture;
+
 	unsigned pointCount;
 	sf::CircleShape shape;
 	int type;
@@ -16,6 +21,8 @@ private:
 	int points;
 
 	void initVariables();
+	void initTexture();
+	void initSprite();
 	void initShape();
 
 public:
@@ -23,6 +30,7 @@ public:
 	virtual ~Enemy();
 
 	//Accessors
+	const sf::Vector2f& getPos() const;
 	const sf::FloatRect getBounds() const;
 	const int& getPoints() const;
 	const int& getDamage() const;

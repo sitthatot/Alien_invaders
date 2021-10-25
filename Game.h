@@ -20,7 +20,7 @@ private:
 	//GUI
 	sf::Font font;
 	sf::Text pointText;
-
+	sf::Text healthText;
 	sf::Text gameOverText;
 
 	//World
@@ -28,6 +28,7 @@ private:
 	sf::Sprite worldBackground;
 
 	//Systems
+	unsigned health;
 	unsigned points;
 
 	//Player
@@ -67,7 +68,30 @@ public:
 	void updateInput();
 	void updateGUI();
 	void updateWorld();
-	void updateCollision();
+	void updateCollision()
+	{
+		//Left world collision
+		if (this->player->getBounds().left < 0.f)
+		{
+			this->player->setPosition(0.f, this->player->getBounds().top);
+		}
+		//Right world collison
+		else if (this->player->getBounds().left + this->player->getBounds().width >= this->window->getSize().x)
+		{
+			this->player->setPosition(this->window->getSize().x - this->player->getBounds().width, this->player->getBounds().top);
+		}
+
+		//Top world collision
+		if (this->player->getBounds().top < 0.f)
+		{
+			this->player->setPosition(this->player->getBounds().left, 0.f);
+		}
+		//Bottom world collision
+		else if (this->player->getBounds().top + this->player->getBounds().height >= this->window->getSize().y)
+		{
+			this->player->setPosition(this->player->getBounds().left, this->window->getSize().y - this->player->getBounds().height);
+		}
+	}
 	void updateBullets();
 	void updateEnemies();
 	void updateCombat();

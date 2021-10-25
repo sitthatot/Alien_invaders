@@ -7,17 +7,13 @@ void Player::initVariables()
 	this->attackCooldownMax = 5.f;
 	this->attackCooldown = this->attackCooldownMax;
 
-	this->hpMax = 100;
+	this->hpMax = 10;
 	this->hp = this->hpMax;
 }
 
 void Player::initTexture()
 {
 	//Load a texture from file
-	/*if (!this->texture.loadFromFile("Textures/bill.gif"))
-	{
-		std::cout << "ERROR::PLAYER::INITTEXTURE::Could not load texture file." << "\n";
-	}*/
 	this->texture.loadFromFile("Textures/bill.png");
 	
 }
@@ -120,7 +116,7 @@ const bool Player::canAttack()
 void Player::updateAttack()
 {
 	if (this->attackCooldown < this->attackCooldownMax)
-		this->attackCooldown += 0.5f;
+		this->attackCooldown += 0.5f;//Bullet speed rate
 }
 
 //Functions

@@ -1,5 +1,6 @@
 #include <iostream>
 #include "Game.h"
+#include<time.h>
 
 //using namespace sf;
 
@@ -7,7 +8,7 @@ int main()
 {
 
 	//Init srand
-	std::srand(static_cast<unsigned>(time(NULL)));
+	srand(time((0)));
 
 	//Init Game engine
 	Game game;
