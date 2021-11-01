@@ -7,7 +7,7 @@ void Player::initVariables()
 	this->attackCooldownMax = 5.f;
 	this->attackCooldown = this->attackCooldownMax;
 
-	this->hpMax = 10;
+	this->hpMax = 100;
 	this->hp = this->hpMax;
 }
 

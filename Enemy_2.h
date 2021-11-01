@@ -1,11 +1,11 @@
-#ifndef ENEMY_H
-#define ENEMY_H
+#ifndef ENEMY_2_H
+#define ENEMY_2_H
 
 #include<SFML/Graphics.hpp>
 #include<SFML/System.hpp>
 #include<iostream>
 
-class Enemy
+class Enemy_2
 {
 private:
 	sf::Sprite sprite;
@@ -19,24 +19,24 @@ private:
 	int hpMax;
 	int damage;
 	int points;
-	sf::Vector2f playerPos;
+
 	void initVariables();
 	void initTexture();
 	void initSprite();
+	void initShape();
 
 public:
-	Enemy(float pos_x, float pos_y, sf::Texture* texture, int type);
-	virtual ~Enemy();
+	Enemy_2(float pos_x, float pos_y);
+	virtual ~Enemy_2();
 
 	//Accessors
 	const sf::Vector2f& getPos() const;
 	const sf::FloatRect getBounds() const;
 	const int& getPoints() const;
 	const int& getDamage() const;
-	const sf::Vector2f& getEnemyPos() const;
 
 	//Functions
-	void update(sf::Vector2f playerPos);
+	void update();
 	void render(sf::RenderTarget* target);
 };
 

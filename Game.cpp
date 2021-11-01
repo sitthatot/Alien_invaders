@@ -1,4 +1,4 @@
-#include "Game.h"
+﻿#include "Game.h"
 #include <iostream>
 #include "SFML/Graphics.hpp"
 #include "SFML/System.hpp"
@@ -34,6 +34,8 @@ void Game::initTextures()
 {
 	this->textures["BULLET"] = new sf::Texture();
 	this->textures["BULLET"]->loadFromFile("Textures/bullet.png");
+	this->enemysprite[0].loadFromFile("Textures/aliena.png");
+	this->enemysprite[1].loadFromFile("Textures/roboball.png");
 }
 
 void Game::initGUI()
@@ -58,15 +60,15 @@ void Game::initGUI()
 		this->window->getSize().y / 2.f - this->gameOverText.getGlobalBounds().height / 2.f);
 
 	//Init player GUI
-	this->playerHpBar.setSize(sf::Vector2f(300.f, 25.f));
+	this->playerHpBar.setSize(sf::Vector2f(150.f, 25.f));
 	this->playerHpBar.setFillColor(sf::Color::Red);
 	this->playerHpBar.setPosition(sf::Vector2f(20.f, 20.f));
 
 	this->playerHpBarBack = this->playerHpBar;
 	this->playerHpBarBack.setFillColor(sf::Color(25, 25, 25, 200));
-}
+}//ค่า HP
 
-void Game::initWorld()
+void Game::initWorld()//background เกม
 {
 	if (!this->worldBackgroundTex.loadFromFile("Textures/background2.jpg"))
 	{
@@ -88,7 +90,7 @@ void Game::initPlayer()
 
 void Game::initEnemies()
 {//Spawn enemy
-	this->spawnTimerMax = 50.f;
+	this->spawnTimerMax = 20.f;
 	this->spawnTimer = this->spawnTimerMax;
 }
 
@@ -197,7 +199,7 @@ void Game::updateGUI()
 
 	//Update player GUI
 	float hpPercent = static_cast<float>(this->player->getHp()) / this->player->getHpMax();
-	this->playerHpBar.setSize(sf::Vector2f(300.f * hpPercent, this->playerHpBar.getSize().y));
+	this->playerHpBar.setSize(sf::Vector2f(150.f * hpPercent, this->playerHpBar.getSize().y));
 }
 
 void Game::updateWorld()
@@ -230,7 +232,19 @@ void Game::updateEnemies()
 	this->spawnTimer += 0.5f;
 	if (this->spawnTimer >= this->spawnTimerMax)
 	{
-		this->enemies.push_back(new Enemy(rand() % this->window->getSize().x - 20.f, -100.f));
+		this->type = rand() % 2;
+		if (type == 0) 
+		{
+			pos.x = rand() % this->window->getSize().x - 20.f;
+			pos.y = -100.f;
+		}
+		else if (type == 1) 
+		{
+			pos.x = this->window->getSize().x + 20.f;
+			pos.y = rand() % this->window->getSize().y;
+
+		}
+		this->enemies.push_back(new Enemy(pos.x,pos.y,&this->enemysprite[this->type], this->type));
 		this->spawnTimer = 0.f;
 	}
 
@@ -238,7 +252,8 @@ void Game::updateEnemies()
 	unsigned counter = 0;
 	for (auto* enemy : this->enemies)
 	{
-		enemy->update();
+		enemy->update(player->getPos());
+
 
 		//Bullet culling (top of screen)
 		if (enemy->getBounds().top > this->window->getSize().y)

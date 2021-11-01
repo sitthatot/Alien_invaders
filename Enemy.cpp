@@ -18,8 +18,7 @@ void Enemy::initTexture()
 
 void Enemy::initSprite()
 {
-	this->sprite.setTexture(this->texture);
-	//Resize the sprite
+	this->sprite.setRotation(180.f);
 	this->sprite.scale(3.f, 3.f);
 	this->sprite.setOrigin(sf::Vector2f(
 		this->sprite.getLocalBounds().width / 2,
@@ -27,28 +26,13 @@ void Enemy::initSprite()
 	);
 }
 
-void Enemy::initShape()
-{
-	//Set the texture to the sprite
-	
-	
-	
-	/*
-	this->shape.setRadius(this->pointCount * 5);
-	this->shape.setPointCount(this->pointCount);
-	this->shape.setFillColor(sf::Color(rand() % 255 + 1, rand() % 255 + 1, rand() % 255 + 1, 255));
-	*/
-}
-
-Enemy::Enemy(float pos_x, float pos_y)
+Enemy::Enemy(float pos_x, float pos_y, sf::Texture* texture, int type)
 {
 	this->initVariables();
-	this->initTexture();
 	this->initSprite();
-	//this->initShape();
-	
-	//this->shape.setPosition(pos_x, pos_y);
+	this->sprite.setTexture(*texture);
 	this->sprite.setPosition(pos_x, pos_y);
+	this->type = type;
 }
 
 Enemy::~Enemy()
@@ -72,12 +56,34 @@ const int& Enemy::getDamage() const
 {
 	return this->damage;
 }
+const sf::Vector2f& Enemy::getEnemyPos() const
+{
+	return this->sprite.getPosition();
+}
 
 //Functions
-void Enemy::update()
+void Enemy::update(sf::Vector2f playerPos)
 {
-	//this->shape.move(0.f, this->speed);
-	this->sprite.move(0.f, this->speed);
+	this->playerPos = playerPos;
+	if (type == 0) 
+	{
+		this->sprite.move(0.f, this->speed);
+	}
+	else if (type == 1)
+	{
+		if (this->playerPos.y > this->getEnemyPos().y)
+		{
+			this->sprite.move(-this->speed, 1.f);
+		}
+		else if (this->playerPos.y < this->getEnemyPos().y)
+		{
+			this->sprite.move(-this->speed, -1.f);
+		}
+		else if (this->playerPos.y == this->getEnemyPos().y)
+		{
+			this->sprite.move(-this->speed, 0.f);
+		}
+	}
 }
 
 void Enemy::render(sf::RenderTarget* target)

@@ -46,6 +46,9 @@ private:
 	float spawnTimer;
 	float spawnTimerMax;
 	std::vector<Enemy*> enemies;
+	sf::Texture enemysprite[2];
+	int type;
+	sf::Vector2f pos;
 
 	//Private functions
 	void initWindow();
@@ -53,7 +56,7 @@ private:
 	void initGUI();
 	void initWorld();
 	void initSystems();
-
+	
 	void initPlayer();
 	void initEnemies();
 
