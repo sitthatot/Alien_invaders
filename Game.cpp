@@ -1,13 +1,5 @@
 ﻿#include "Game.h"
-#include <iostream>
-#include "SFML/Graphics.hpp"
-#include "SFML/System.hpp"
-#include "SFML/Window.hpp"
-#include "SFML/Audio.hpp"
-#include <SFML/Network.hpp>
-#include <math.h>
-#include <vector>
-#include <cstdlib>
+
 using namespace sf;
 using namespace std;
 
@@ -36,6 +28,8 @@ void Game::initTextures()
 	this->textures["BULLET"]->loadFromFile("Textures/bullet.png");
 	this->enemysprite[0].loadFromFile("Textures/aliena.png");
 	this->enemysprite[1].loadFromFile("Textures/roboball.png");
+	this->itemTexture[0].loadFromFile("Textures/heart.png");
+	this->itemTexture[1].loadFromFile("Textures/shotgun.png");
 }
 
 void Game::initGUI()
@@ -88,6 +82,13 @@ void Game::initPlayer()
 	this->player->setPosition(500.f, 350.f);
 }
 
+void Game::initItem()
+{
+	//Spawn Item
+	this->itemSpawnTimerMax = 50.f;
+	this->itemSpawnTimer = this->spawnTimerMax;
+}
+
 void Game::initEnemies()
 {//Spawn enemy
 	this->spawnTimerMax = 20.f;
@@ -102,8 +103,8 @@ Game::Game()
 	this->initGUI();
 	this->initWorld();
 	this->initSystems();
-
 	this->initPlayer();
+	this->initItem();
 	this->initEnemies();
 }
 
@@ -128,6 +129,12 @@ Game::~Game()
 
 	//Delete enemies
 	for (auto* i : this->enemies)
+	{
+		delete i;
+		break;
+	}
+
+	for (auto* i : this->items)
 	{
 		delete i;
 		break;
@@ -250,29 +257,88 @@ void Game::updateEnemies()
 
 	//Update
 	unsigned counter = 0;
-	for (auto* enemy : this->enemies)
+	for (int i=0; i<enemies.size(); i++)
 	{
-		enemy->update(player->getPos());
-
-
-		//Bullet culling (top of screen)
-		if (enemy->getBounds().top > this->window->getSize().y)
+		this->enemies[i]->update(this->player->getPos());
+		if (this->enemies[i]->getBounds().top > this->window->getSize().y)
 		{
 			//Delete enemy
-			delete this->enemies.at(counter);
-			this->enemies.erase(this->enemies.begin() + counter);
-			break;
+			delete this->enemies[i];
+			this->enemies.erase(this->enemies.begin() + i);
 		}
 		//Enemy player collision
-		else if (enemy->getBounds().intersects(this->player->getBounds()))
+		else if (this->enemies[i]->getBounds().intersects(this->player->getBounds()))
 		{
-			this->player->loseHp(this->enemies.at(counter)->getDamage());
-			delete this->enemies.at(counter);
-			this->enemies.erase(this->enemies.begin() + counter);
-			break;
+			this->player->loseHp(this->enemies[i]->getDamage());
+			delete this->enemies[i];
+			this->enemies.erase(this->enemies.begin() + i);
 		}
+	}
+	// for (auto* enemy : this->enemies)
+	// {
+	// 	enemy->update(player->getPos());
 
-		++counter;
+
+	// 	//Bullet culling (top of screen)
+	// 	if (enemy->getBounds().top > this->window->getSize().y)
+	// 	{
+	// 		//Delete enemy
+	// 		delete this->enemies.at(counter);
+	// 		this->enemies.erase(this->enemies.begin() + counter);
+	// 		break;
+	// 	}
+	// 	//Enemy player collision
+	// 	else if (enemy->getBounds().intersects(this->player->getBounds()))
+	// 	{
+	// 		this->player->loseHp(this->enemies.at(counter)->getDamage());
+	// 		delete this->enemies.at(counter);
+	// 		this->enemies.erase(this->enemies.begin() + counter);
+	// 		break;
+	// 	}
+
+	// 	++counter;
+	// }
+}
+
+void Game::updateItem()
+{
+	//Spawning
+	this->itemSpawnTimer += 0.5f;
+	if (this->itemSpawnTimer >= this->itemSpawnTimerMax)
+	{
+		this->itemSpawnTimer -= this->itemSpawnTimerMax;
+		this->randomItem = rand() % 2;
+		this->items.push_back(new Item(&this->itemTexture[randomItem], this->window->getSize().x + 100, this->window->getSize().y - ((rand() % this->window->getSize().y - 200) + 100.f), this->randomItem));
+		this->itemSpawnTimer = 0.f;
+	}
+
+	//Update
+
+	for (int i = 0; i < items.size(); i++)
+	{
+		this->items[i]->updateItem();
+		//Bullet culling (top of screen)
+		if (this->items[i]->deleteItem())
+		{
+			//Delete Item
+			delete this->items[i];
+			this->items.erase(this->items.begin() + i);
+		}
+		//Item player collision
+		else if (this->items[i]->getBounds().intersects(this->player->getBounds()))
+		{
+			if (this->items[i]->itemType() == 0)
+			{
+				this->player->plusHp(rand() % 10+1);
+				delete this->items[i];
+				this->items.erase(this->items.begin() + i);
+			}
+			else if (this->items[i]->itemType() == 1)
+			{
+				delete this->items[i];
+				this->items.erase(this->items.begin() + i);
+			}
+		}
 	}
 }
 
@@ -311,6 +377,8 @@ void Game::update()
 
 	this->updateEnemies();
 
+	this->updateItem();
+
 	this->updateCombat();
 
 	this->updateGUI();
@@ -319,7 +387,6 @@ void Game::update()
 
 	this->mousePosView = sf::Vector2f(sf::Mouse::getPosition(*window));
 
-	std::cout << sf::Mouse::getPosition().x << " " << sf::Mouse::getPosition().y << "\n";
 }
 
 void Game::renderGUI()
@@ -352,6 +419,11 @@ void Game::render()
 	for (auto* enemy : this->enemies)
 	{
 		enemy->render(this->window);
+	}
+
+	for (auto* Item : this->items)
+	{
+		Item->render(this->window);
 	}
 
 	this->renderGUI();

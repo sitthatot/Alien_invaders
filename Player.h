@@ -41,7 +41,7 @@ public:
 	void setPosition(const float x, const float y);
 	void setHp(const int hp);
 	void loseHp(const int value);
-
+	void plusHp(int hp);
 	//Functions
 	void move(const float dirX, const float dirY, sf::Vector2f mousePosView);
 	const bool canAttack();

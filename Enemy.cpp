@@ -7,7 +7,6 @@ void Enemy::initVariables()
 	this->speed = static_cast<float>(this->pointCount / 3);
 	this->hpMax = static_cast<int>(this->pointCount);
 	this->hp = this->hpMax;
-	this->damage = this->pointCount;
 	this->points = this->pointCount;
 }
 
@@ -33,6 +32,14 @@ Enemy::Enemy(float pos_x, float pos_y, sf::Texture* texture, int type)
 	this->sprite.setTexture(*texture);
 	this->sprite.setPosition(pos_x, pos_y);
 	this->type = type;
+	if (this->type == 0)
+	{
+		this->damage = 1;
+	}
+	else if (this->type == 1)
+	{
+		this->damage = 2;
+	}
 }
 
 Enemy::~Enemy()

@@ -7,7 +7,7 @@ void Player::initVariables()
 	this->attackCooldownMax = 5.f;
 	this->attackCooldown = this->attackCooldownMax;
 
-	this->hpMax = 100;
+	this->hpMax = 10;
 	this->hp = this->hpMax;
 }
 
@@ -88,6 +88,15 @@ void Player::loseHp(const int value)
 	this->hp -= value;
 	if (this->hp < 0)
 		this->hp = 0;
+}
+
+void Player::plusHp(int hp)
+{
+	this->hp += hp;
+	if (this->hp >= this->hpMax)
+	{
+		this->hp = this->hpMax;
+	}
 }
 
 void Player::move(const float dirX, const float dirY, sf::Vector2f mousePosView)

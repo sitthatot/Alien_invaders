@@ -1,11 +1,23 @@
 #pragma once
 
+#include <iostream>
+#include "SFML/Graphics.hpp"
+#include "SFML/System.hpp"
+#include "SFML/Window.hpp"
+#include "SFML/Audio.hpp"
+#include <SFML/Network.hpp>
+#include <math.h>
+#include <vector>
+#include <cstdlib>
 #include<map>
+
 #include<string>
 #include<sstream>
 #include"Player.h"
 #include"Bullet.h"
 #include"Enemy.h"
+#include "Item.h"
+
 
 class Game
 {
@@ -34,6 +46,16 @@ private:
 	//Player
 	Player* player;
 
+	//Item
+	std::vector<Item*> items;
+	float itemSpawnTimer;
+	float itemSpawnTimerMax;
+	float setScale[2];
+	int randomItem;
+	int type_item;
+	sf::Texture itemTexture[2];
+	sf::Sprite itemSprite[2];
+
 	//Mouse positions
 	sf::Vector2i mousePosWindow;
 	sf::Vector2f mousePosView;
@@ -47,17 +69,18 @@ private:
 	float spawnTimerMax;
 	std::vector<Enemy*> enemies;
 	sf::Texture enemysprite[2];
+	sf::Texture itemsprite[2];
 	int type;
 	sf::Vector2f pos;
 
-	//Private functions
+	//Con Private functions
 	void initWindow();
 	void initTextures();
 	void initGUI();
 	void initWorld();
 	void initSystems();
-	
 	void initPlayer();
+	void initItem();
 	void initEnemies();
 
 public:
@@ -97,6 +120,7 @@ public:
 	}
 	void updateBullets();
 	void updateEnemies();
+	void updateItem();
 	void updateCombat();
 	void update();
 	
