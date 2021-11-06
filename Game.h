@@ -82,7 +82,6 @@ private:
 	void initPlayer();
 	void initItem();
 	void initEnemies();
-
 public:
 	Game();
 	virtual ~Game();

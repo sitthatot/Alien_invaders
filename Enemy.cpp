@@ -2,7 +2,7 @@
 
 void Enemy::initVariables()
 {
-	this->pointCount = 5; //min = 3 max = 10
+	this->pointCount = 5;
 	this->type = 0;
 	this->speed = static_cast<float>(this->pointCount / 3);
 	this->hpMax = static_cast<int>(this->pointCount);
@@ -39,6 +39,7 @@ Enemy::Enemy(float pos_x, float pos_y, sf::Texture* texture, int type)
 	else if (this->type == 1)
 	{
 		this->damage = 2;
+		//pointCount = 10;
 	}
 }
 

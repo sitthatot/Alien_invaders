@@ -4,11 +4,13 @@ void Player::initVariables()
 {
 	this->movementSpeed = 2.f;
 	this->playerAngle = 0.f;
-	this->attackCooldownMax = 5.f;
+	this->attackCooldownMax = 5.f;//Bullet rate
 	this->attackCooldown = this->attackCooldownMax;
-
 	this->hpMax = 10;
 	this->hp = this->hpMax;
+	this->itemCoolDownMax = 3000.f;
+	this->itemCoolDown = 0.f;
+	fireRateflag = false;
 }
 
 void Player::initTexture()
@@ -122,10 +124,60 @@ const bool Player::canAttack()
 	return false;
 }
 
+void Player::getFireRate()
+{
+	this->fireRateflag = true;
+}
+
+
+
 void Player::updateAttack()
 {
 	if (this->attackCooldown < this->attackCooldownMax)
-		this->attackCooldown += 0.5f;//Bullet speed rate
+	{
+		//this->attackCooldown += 0.3f;//Bullet speed rate
+	}
+	if (this->fireRateflag == true) 
+	{
+		std::cout << "out";
+		if (this->itemCoolDown >= this->itemCoolDownMax)
+		{
+			this->fireRateflag = false;
+			this->itemCoolDown = 0;
+			//std::cout << "stop";
+		}
+		if (this->itemCoolDown < this->itemCoolDownMax)
+		{
+			this->itemCoolDown += 5.f;
+			//std::cout << "rate";
+		}
+
+	}
+	if (this->fireRateflag == false)
+	{
+		//std::cout << "0";
+		//std::cout << itemCoolDown<<"\n";
+		attackCooldown += 0.3f;
+		//attackCooldownMax = 5.f;
+	}
+	else if (this->fireRateflag == true)
+	{
+		//std::cout << "1";
+		attackCooldown += 2.f;
+		//std::cout << itemCoolDown << "\n";
+		//attackCooldownMax = 2.f;
+	}
+	//	
+	//if (this->fireRateflag == true)
+	//{
+	//	if (this->attackCooldown < this->attackCooldownMax)
+	//	{
+	//		//this->fireRateflag = false;
+	//		this->attackCooldown += 10.f;//Bullet speed rate
+	//	}
+	//}
+	
+	
 }
 
 //Functions

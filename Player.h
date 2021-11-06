@@ -14,6 +14,8 @@ private:
 	float playerAngle;
 	float attackCooldown;
 	float attackCooldownMax;
+	float itemCoolDown;
+	float itemCoolDownMax;
 	//position
 	sf::Vector2f player_position;
 	sf::Vector2f mouse_distance;
@@ -35,7 +37,7 @@ public:
 	float& getAngle();
 	const int& getHp() const;
 	const int& getHpMax() const;
-
+	bool fireRateflag = false;
 	//Modifiers
 	void setPosition(const sf::Vector2f pos);
 	void setPosition(const float x, const float y);
@@ -45,7 +47,7 @@ public:
 	//Functions
 	void move(const float dirX, const float dirY, sf::Vector2f mousePosView);
 	const bool canAttack();
-
+	void getFireRate();
 	void updateAttack();
 	void update();
 	void render(sf::RenderTarget& target);

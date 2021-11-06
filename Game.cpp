@@ -91,7 +91,8 @@ void Game::initItem()
 
 void Game::initEnemies()
 {//Spawn enemy
-	this->spawnTimerMax = 20.f;
+
+	this->spawnTimerMax = 50.f;
 	this->spawnTimer = this->spawnTimerMax;
 }
 
@@ -216,20 +217,29 @@ void Game::updateWorld()
 
 void Game::updateBullets()
 {
-	unsigned counter = 0;
-	for (auto* bullet : this->bullets)
+	//unsigned counter = 0;
+	//for (auto* bullet : this->bullets)
+	//{
+	//	bullet->update();
+
+	//	//Bullet culling (top of screen)
+	//	if (bullet->getBounds().top + bullet->getBounds().height < 0.f)
+	//	{
+	//		//Delete bullet
+	//		delete this->bullets.at(counter);
+	//		this->bullets.erase(this->bullets.begin() + counter);
+	//	}
+
+	//	++counter;
+	//}
+	for (int i = 0; i < bullets.size(); i++)
 	{
-		bullet->update();
-
-		//Bullet culling (top of screen)
-		if (bullet->getBounds().top + bullet->getBounds().height < 0.f)
+		bullets[i]->update();
+		if (bullets[i]->getBounds().top + bullets[i]->getBounds().height < 0.f)
 		{
-			//Delete bullet
-			delete this->bullets.at(counter);
-			this->bullets.erase(this->bullets.begin() + counter);
+			delete this->bullets[i];
+			this->bullets.erase(this->bullets.begin() + i);
 		}
-
-		++counter;
 	}
 }
 
@@ -240,24 +250,40 @@ void Game::updateEnemies()
 	if (this->spawnTimer >= this->spawnTimerMax)
 	{
 		this->type = rand() % 2;
-		if (type == 0) 
+		if (type == 0)
 		{
 			pos.x = rand() % this->window->getSize().x - 20.f;
 			pos.y = -100.f;
 		}
-		else if (type == 1) 
+		else if (type == 1)
 		{
 			pos.x = this->window->getSize().x + 20.f;
 			pos.y = rand() % this->window->getSize().y;
 
 		}
-		this->enemies.push_back(new Enemy(pos.x,pos.y,&this->enemysprite[this->type], this->type));
+		this->enemies.push_back(new Enemy(pos.x, pos.y, &this->enemysprite[this->type], this->type));
 		this->spawnTimer = 0.f;
+	}
+	if (this->points > 100 && this->points <= 200) 
+	{
+		this->spawnTimerMax = 30.f;
+	}
+	else if (this->points > 200 && this->points <= 700)
+	{
+		this->spawnTimerMax = 20.f;
+	}
+	else if (this->points > 700 && this->points <= 3000)
+	{
+		this->spawnTimerMax = 10.f;
+	}
+	else if (this->points > 3000)
+	{
+		this->spawnTimerMax = 5.f;
 	}
 
 	//Update
 	unsigned counter = 0;
-	for (int i=0; i<enemies.size(); i++)
+	for (int i = 0; i < enemies.size(); i++)
 	{
 		this->enemies[i]->update(this->player->getPos());
 		if (this->enemies[i]->getBounds().top > this->window->getSize().y)
@@ -308,7 +334,7 @@ void Game::updateItem()
 	{
 		this->itemSpawnTimer -= this->itemSpawnTimerMax;
 		this->randomItem = rand() % 2;
-		this->items.push_back(new Item(&this->itemTexture[randomItem], this->window->getSize().x + 100, this->window->getSize().y - ((rand() % this->window->getSize().y - 200) + 100.f), this->randomItem));
+		this->items.push_back(new Item(&this->itemTexture[randomItem], this->window->getSize().x, this->window->getSize().y - ((rand() % this->window->getSize().y - 200) + 100.f), this->randomItem));
 		this->itemSpawnTimer = 0.f;
 	}
 
@@ -329,12 +355,13 @@ void Game::updateItem()
 		{
 			if (this->items[i]->itemType() == 0)
 			{
-				this->player->plusHp(rand() % 10+1);
+				this->player->plusHp(5);
 				delete this->items[i];
 				this->items.erase(this->items.begin() + i);
 			}
 			else if (this->items[i]->itemType() == 1)
 			{
+				this->player->getFireRate();
 				delete this->items[i];
 				this->items.erase(this->items.begin() + i);
 			}
@@ -351,7 +378,15 @@ void Game::updateCombat()
 		{
 			if (this->enemies[i]->getBounds().intersects(this->bullets[k]->getBounds()))
 			{
-				this->points += this->enemies[i]->getPoints();
+				if (this->type == 0)
+				{
+					this->points += this->enemies[i]->getPoints()+5;
+				}
+				if (this->type == 1)
+				{
+					this->points += this->enemies[i]->getPoints();
+				}
+				
 
 				delete this->enemies[i];
 				this->enemies.erase(this->enemies.begin() + i);
