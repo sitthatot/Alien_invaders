@@ -1,5 +1,5 @@
 ﻿#include "Game.h"
-
+#include "Menu.h"
 using namespace sf;
 using namespace std;
 
@@ -14,13 +14,15 @@ void Game::updateMousePositions()
 	this->mousePosWindow = sf::Mouse::getPosition(*this->window);
 	this->mousePosView = this->window->mapPixelToCoords(this->mousePosWindow);
 }
+
 //Private functions
 void Game::initWindow()
-{
-	this->window = new sf::RenderWindow(sf::VideoMode(1078, 850), "Invaders", sf::Style::Close | sf::Style::Titlebar);
+{//1078, 580
+	this->window = new sf::RenderWindow(sf::VideoMode(1078, 850), "Invaders");
 	this->window->setFramerateLimit(144);
 	this->window->setVerticalSyncEnabled(false);
 }
+
 
 void Game::initTextures()
 {
@@ -85,7 +87,7 @@ void Game::initPlayer()
 void Game::initItem()
 {
 	//Spawn Item
-	this->itemSpawnTimerMax = 50.f;
+	this->itemSpawnTimerMax = 500.f;
 	this->itemSpawnTimer = this->spawnTimerMax;
 }
 
@@ -210,10 +212,6 @@ void Game::updateGUI()
 	this->playerHpBar.setSize(sf::Vector2f(150.f * hpPercent, this->playerHpBar.getSize().y));
 }
 
-void Game::updateWorld()
-{
-
-}
 
 void Game::updateBullets()
 {
@@ -266,7 +264,7 @@ void Game::updateEnemies()
 	}
 	if (this->points > 100 && this->points <= 200) 
 	{
-		this->spawnTimerMax = 30.f;
+		this->spawnTimerMax = 5.f;
 	}
 	else if (this->points > 200 && this->points <= 700)
 	{
@@ -418,11 +416,12 @@ void Game::update()
 
 	this->updateGUI();
 
-	this->updateWorld();
+	//this->updateWorld();
 
 	this->mousePosView = sf::Vector2f(sf::Mouse::getPosition(*window));
 
 }
+
 
 void Game::renderGUI()
 {
@@ -439,6 +438,7 @@ void Game::renderWorld()
 void Game::render()
 {
 	this->window->clear();
+	//Draw Menu
 
 	//Draw world
 	this->renderWorld();

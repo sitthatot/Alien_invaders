@@ -17,14 +17,15 @@
 #include"Bullet.h"
 #include"Enemy.h"
 #include "Item.h"
+#include "Menu.h"
 
 
 class Game
 {
 private:
+	
 	//Window
 	sf::RenderWindow* window;
-
 	//Resources
 	std::map<std::string, sf::Texture*> textures;
 	std::vector<Bullet*> bullets;
@@ -92,7 +93,6 @@ public:
 	void updatePollEvents();
 	void updateInput();
 	void updateGUI();
-	void updateWorld();
 	void updateCollision()
 	{
 		//Left world collision
@@ -122,7 +122,6 @@ public:
 	void updateItem();
 	void updateCombat();
 	void update();
-	
 	void renderGUI();
 	void renderWorld();
 	void render();

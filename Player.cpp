@@ -139,7 +139,7 @@ void Player::updateAttack()
 	}
 	if (this->fireRateflag == true) 
 	{
-		std::cout << "out";
+		//std::cout << "out";
 		if (this->itemCoolDown >= this->itemCoolDownMax)
 		{
 			this->fireRateflag = false;

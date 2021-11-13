@@ -8,7 +8,7 @@ int main()
 {
 
 	//Init srand
-	srand(time((0)));
+	srand(time(nullptr));
 
 	//Init Game engine
 	Game game;
