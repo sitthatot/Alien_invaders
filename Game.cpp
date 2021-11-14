@@ -1,4 +1,5 @@
-﻿#include "Game.h"
+﻿#define _CRT_SECURE_NO_WARNINGS
+#include "Game.h"
 #include "Menu.h"
 using namespace sf;
 using namespace std;
@@ -18,9 +19,9 @@ void Game::updateMousePositions()
 //Private functions
 void Game::initWindow()
 {//1078, 580
-	this->window = new sf::RenderWindow(sf::VideoMode(1078, 850), "Invaders");
-	this->window->setFramerateLimit(144);
-	this->window->setVerticalSyncEnabled(false);
+	
+	//this->window->setFramerateLimit(144);
+	//this->window->setVerticalSyncEnabled(false);
 }
 
 
@@ -100,8 +101,11 @@ void Game::initEnemies()
 }
 
 //Con/Des
-Game::Game()
+Game::Game(sf::RenderWindow* window, Entername* entername)
 {
+	this->window = window;
+	this->window->setFramerateLimit(144);
+	this->window->setVerticalSyncEnabled(false);
 	this->initWindow();
 	this->initTextures();
 	this->initGUI();
@@ -110,11 +114,13 @@ Game::Game()
 	this->initPlayer();
 	this->initItem();
 	this->initEnemies();
+
+	this->entername = entername;
 }
 
 Game::~Game()
 {
-	delete this->window;
+	//delete this->window;
 	delete this->player;
 
 	//Delete textures
@@ -175,13 +181,13 @@ void Game::updateInput()
 {
 	//Move player
 	this->player->move(0.f, 0.f, mousePosView);
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) && this->player->getBounds().left + this->player->getBounds().width >= 0.f)
 		this->player->move(-1.f, 0.f, mousePosView);
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) && this->player->getBounds().left + this->player->getBounds().width < this->window->getSize().x)
 		this->player->move(1.f, 0.f, mousePosView);
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) && this->player->getBounds().top >= 0.f)
 		this->player->move(0.f, -1.f, mousePosView);
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) && this->player->getBounds().top + this->player->getBounds().height < this->window->getSize().y)
 		this->player->move(0.f, 1.f, mousePosView);
 
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && this->player->canAttack())
@@ -297,6 +303,9 @@ void Game::updateEnemies()
 			this->player->loseHp(this->enemies[i]->getDamage());
 			delete this->enemies[i];
 			this->enemies.erase(this->enemies.begin() + i);
+			if (this->player->getHp() <= 0) {
+				this->updateHigh(this->entername->getPlayerName(), this->points);
+			}
 		}
 	}
 	// for (auto* enemy : this->enemies)
@@ -405,7 +414,7 @@ void Game::update()
 
 	this->player->update();
 
-	this->updateCollision();
+	//this->updateCollision();
 
 	this->updateBullets();
 
@@ -423,6 +432,28 @@ void Game::update()
 
 }
 
+void Game::updateHigh(std::string name, unsigned int score)
+{
+	this->fq = fopen("scoreboard/scoreboard.txt", "r");
+	for (int i = 0; i < 5; i++)
+	{
+		fscanf(fq, "%s", &temp);
+		this->name[i] = temp;
+		fscanf(fq, "%d", &this->score[i]);
+		this->userScore.push_back(std::make_pair(this->score[i], this->name[i]));
+	}
+	this->name[5] = name;
+	this->score[5] = score;
+	this->userScore.push_back(std::make_pair(this->score[5], this->name[5]));
+	std::sort(this->userScore.begin(), this->userScore.end());
+	fclose(this->fq);
+	this->fq = fopen("scoreboard/scoreboard.txt", "w");
+	for (int i = 5; i >= 1; i--)
+	{
+		fprintf(fq, "%s %d\n", userScore[i].second.c_str(), userScore[i].first);
+	}
+	fclose(this->fq);
+}
 
 void Game::renderGUI()
 {
@@ -463,8 +494,9 @@ void Game::render()
 	this->renderGUI();
 
 	//Game over screen
-	if (this->player->getHp() <= 0)
+	if (this->player->getHp() <= 0) {
 		this->window->draw(this->gameOverText);
+	}
 
 	this->window->display();
 }

@@ -18,6 +18,7 @@
 #include"Enemy.h"
 #include "Item.h"
 #include "Menu.h"
+#include "Entername.h"
 
 
 class Game
@@ -57,6 +58,13 @@ private:
 	sf::Texture itemTexture[2];
 	sf::Sprite itemSprite[2];
 
+	//Score
+	FILE* fq;
+	char temp[255];
+	int score[6];
+	std::string name[6];
+	std::vector <std::pair<int, std::string>> userScore;
+
 	//Mouse positions
 	sf::Vector2i mousePosWindow;
 	sf::Vector2f mousePosView;
@@ -73,6 +81,7 @@ private:
 	sf::Texture itemsprite[2];
 	int type;
 	sf::Vector2f pos;
+	Entername* entername;
 
 	//Con Private functions
 	void initWindow();
@@ -84,7 +93,7 @@ private:
 	void initItem();
 	void initEnemies();
 public:
-	Game();
+	Game(sf::RenderWindow *window, Entername *entername);
 	virtual ~Game();
 
 	//Functions
@@ -125,4 +134,5 @@ public:
 	void renderGUI();
 	void renderWorld();
 	void render();
+	void updateHigh(std::string name, unsigned int score);
 };

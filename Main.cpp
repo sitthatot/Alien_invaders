@@ -1,13 +1,16 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include "Game.h"
-#include<time.h>
+#include <time.h>
 #include "Menu.h"
+#include "Highscore.h"
+#include "Entername.h"
+#include <vector>
 //using namespace sf;
 
 int main()
 {
-	
+	int state = 0;
 	sf::RenderWindow window(sf::VideoMode(1078, 850), "Invaders");
 	Menu menu(window.getSize().x,window.getSize().y);
 	sf::Texture texture;
@@ -17,7 +20,10 @@ int main()
 	sf::Sprite background;
 	background.setTexture(texture);
 	srand(time(nullptr));
-	Game game;
+	Highscore highscore(&window);
+	Entername entername(&window);
+	Game game(&window, &entername);
+	std::vector<sf::Event> textEnter;
 	while (window.isOpen())
 	{
 		sf::Event event;
@@ -25,6 +31,10 @@ int main()
 		{
 			switch (event.type)
 			{
+			case sf::Event::TextEntered:
+				if (state == 3) {
+					textEnter.push_back(event);
+				}
 			case sf::Event::KeyReleased:
 				switch (event.key.code)
 				{
@@ -41,13 +51,19 @@ int main()
 					case 0:
 						std::cout << "Play";
 						//go to state
+						if (state == 3) {
+							state = 1;
+							break;
+						}
+						state = 3;
 						
 						
-						game.run();
 						break;
 					case 1:
 						std::cout << "leader";
+						state = 2;
 						//go to state
+						//highscore.render();
 						break;
 					case 2:
 						window.close();
@@ -56,15 +72,34 @@ int main()
 					break;
 				}
 				break;
+			
+			
 			case sf::Event::Closed:
 				window.close();
 				break;
 			}
 		}
-		window.clear();
-		window.draw(background);
-		menu.draw(window);
-		window.display();
+		switch (state)
+		{
+		case 0:
+			window.clear();
+			window.draw(background);
+			menu.draw(window);
+			window.display();
+			break;
+		case 1:
+			game.run();
+			break;
+		case 2:
+			highscore.render();
+			break;
+		case 3:
+			entername.enterName(textEnter);
+			textEnter.clear();
+			entername.render();
+			break;
+		}
+		
 	}
 	
 		
