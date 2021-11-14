@@ -240,8 +240,11 @@ void Game::updateBullets()
 	for (int i = 0; i < bullets.size(); i++)
 	{
 		bullets[i]->update();
-		if (bullets[i]->getBounds().top + bullets[i]->getBounds().height < 0.f)
+		if (bullets[i]->getBounds().top < 0.f || bullets[i]->getBounds().left < 0.f
+			||bullets[i]->getBounds().left + bullets[i]->getBounds().width >= this->window->getSize().x
+			||bullets[i]->getBounds().top + bullets[i]->getBounds().height >= this->window->getSize().y)
 		{
+			std::cout << "Out";
 			delete this->bullets[i];
 			this->bullets.erase(this->bullets.begin() + i);
 		}
@@ -291,9 +294,11 @@ void Game::updateEnemies()
 	for (int i = 0; i < enemies.size(); i++)
 	{
 		this->enemies[i]->update(this->player->getPos());
-		if (this->enemies[i]->getBounds().top > this->window->getSize().y)
+		if (this->enemies[i]->getBounds().top > this->window->getSize().y
+			|| this->enemies[i]->getBounds().left < 0)
 		{
 			//Delete enemy
+			std::cout << "Destroy";
 			delete this->enemies[i];
 			this->enemies.erase(this->enemies.begin() + i);
 		}
@@ -308,30 +313,6 @@ void Game::updateEnemies()
 			}
 		}
 	}
-	// for (auto* enemy : this->enemies)
-	// {
-	// 	enemy->update(player->getPos());
-
-
-	// 	//Bullet culling (top of screen)
-	// 	if (enemy->getBounds().top > this->window->getSize().y)
-	// 	{
-	// 		//Delete enemy
-	// 		delete this->enemies.at(counter);
-	// 		this->enemies.erase(this->enemies.begin() + counter);
-	// 		break;
-	// 	}
-	// 	//Enemy player collision
-	// 	else if (enemy->getBounds().intersects(this->player->getBounds()))
-	// 	{
-	// 		this->player->loseHp(this->enemies.at(counter)->getDamage());
-	// 		delete this->enemies.at(counter);
-	// 		this->enemies.erase(this->enemies.begin() + counter);
-	// 		break;
-	// 	}
-
-	// 	++counter;
-	// }
 }
 
 void Game::updateItem()
@@ -355,6 +336,7 @@ void Game::updateItem()
 		if (this->items[i]->deleteItem())
 		{
 			//Delete Item
+			std::cout << "item remove";
 			delete this->items[i];
 			this->items.erase(this->items.begin() + i);
 		}

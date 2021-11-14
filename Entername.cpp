@@ -7,7 +7,7 @@ Entername::Entername(sf::RenderWindow* window)
 	this->playerLabel.setFont(this->font);
 	this->playerLabel.setCharacterSize(20);
 	this->playerLabel.setFillColor(sf::Color::White);
-	this->playerLabel.setPosition((1078 / 2) - (400 / 2), 115);
+	this->playerLabel.setPosition((1078 / 2) - (310 / 2), 115);
 	this->playerLabel.setLetterSpacing(1.5);
 	//this->playerLabel.setString(this->playerName);
 	this->playerLabel.setString("Enter Your Name");
@@ -15,7 +15,7 @@ Entername::Entername(sf::RenderWindow* window)
 	this->player.setFont(this->font);
 	this->player.setCharacterSize(20);
 	this->player.setFillColor(sf::Color::White);
-	this->player.setPosition((1078 / 2) - (400 / 2), 155);
+	this->player.setPosition((1078 / 2), 170);
 	this->player.setLetterSpacing(1.5);
 	this->player.setString(this->playerName);
 	//this->player.setString("Enter Your Name");
