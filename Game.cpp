@@ -24,6 +24,7 @@ void Game::initWindow()
 }
 
 
+
 void Game::initTextures()
 {
 	this->textures["BULLET"] = new sf::Texture();
@@ -262,7 +263,7 @@ void Game::updateEnemies()
 		this->enemies.push_back(new Enemy(pos.x, pos.y, &this->enemysprite[this->type], this->type));
 		this->spawnTimer = 0.f;
 	}
-	if (this->points > 100 && this->points <= 200) 
+	if (this->points > 100 && this->points <= 200)
 	{
 		this->spawnTimerMax = 5.f;
 	}
@@ -378,13 +379,13 @@ void Game::updateCombat()
 			{
 				if (this->type == 0)
 				{
-					this->points += this->enemies[i]->getPoints()+5;
+					this->points += this->enemies[i]->getPoints() + 5;
 				}
 				if (this->type == 1)
 				{
 					this->points += this->enemies[i]->getPoints();
 				}
-				
+
 
 				delete this->enemies[i];
 				this->enemies.erase(this->enemies.begin() + i);
@@ -438,8 +439,6 @@ void Game::renderWorld()
 void Game::render()
 {
 	this->window->clear();
-	//Draw Menu
-
 	//Draw world
 	this->renderWorld();
 

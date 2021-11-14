@@ -23,7 +23,7 @@
 class Game
 {
 private:
-	
+
 	//Window
 	sf::RenderWindow* window;
 	//Resources
@@ -86,7 +86,7 @@ private:
 public:
 	Game();
 	virtual ~Game();
-	
+
 	//Functions
 	void run();
 	void updateMousePositions();
@@ -96,7 +96,7 @@ public:
 	void updateCollision()
 	{
 		//Left world collision
-		if (this->player->getBounds().left < 0.f)
+		if (this->player->getBounds().left + this->player->getBounds().width < 0.f)
 		{
 			this->player->setPosition(0.f, this->player->getBounds().top);
 		}
@@ -107,7 +107,7 @@ public:
 		}
 
 		//Top world collision
-		if (this->player->getBounds().top < 0.f)
+		if (this->player->getBounds().top< 0.f)
 		{
 			this->player->setPosition(this->player->getBounds().left, 0.f);
 		}
