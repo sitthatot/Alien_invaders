@@ -91,7 +91,16 @@ int main()
 			game.run();
 			break;
 		case 2:
-			highscore.render();
+			switch (event.key.code)
+			{
+			case sf::Keyboard::Escape:
+				std::cout << "esc";
+				state = 0;
+				break;
+			default:highscore.render();
+				break;
+			}
+			//highscore.render();
 			break;
 		case 3:
 			entername.enterName(textEnter);
@@ -99,6 +108,7 @@ int main()
 			entername.render();
 			break;
 		}
+
 		
 	}
 	
