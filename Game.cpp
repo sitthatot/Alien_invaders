@@ -181,7 +181,7 @@ void Game::updateInput()
 {
 	//Move player
 	this->player->move(0.f, 0.f, mousePosView);
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) && this->player->getBounds().left + this->player->getBounds().width >= 0.f)
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) && this->player->getBounds().left >= 0.f)
 		this->player->move(-1.f, 0.f, mousePosView);
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) && this->player->getBounds().left + this->player->getBounds().width < this->window->getSize().x)
 		this->player->move(1.f, 0.f, mousePosView);

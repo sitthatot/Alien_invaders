@@ -105,7 +105,7 @@ public:
 	void updateCollision()
 	{
 		//Left world collision
-		if (this->player->getBounds().left + this->player->getBounds().width < 0.f)
+		if (this->player->getBounds().left < 0.f)
 		{
 			this->player->setPosition(0.f, this->player->getBounds().top);
 		}
