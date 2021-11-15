@@ -1,3 +1,4 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include "Player.h"
 
 void Player::initVariables()
@@ -167,17 +168,6 @@ void Player::updateAttack()
 		//std::cout << itemCoolDown << "\n";
 		//attackCooldownMax = 2.f;
 	}
-	//	
-	//if (this->fireRateflag == true)
-	//{
-	//	if (this->attackCooldown < this->attackCooldownMax)
-	//	{
-	//		//this->fireRateflag = false;
-	//		this->attackCooldown += 10.f;//Bullet speed rate
-	//	}
-	//}
-	
-	
 }
 
 //Functions

@@ -1,6 +1,7 @@
 ﻿#define _CRT_SECURE_NO_WARNINGS
 #include "Game.h"
 #include "Menu.h"
+#include "SFML/Audio.hpp"
 using namespace sf;
 using namespace std;
 
@@ -74,6 +75,7 @@ void Game::initWorld()//background เกม
 		std::cout << "ERROR::GAME::COULD NOT LOAD BACKGROUND TEXTURE" << "\n";
 	}
 	this->worldBackground.setTexture(this->worldBackgroundTex);
+	
 }
 
 void Game::initSystems()
@@ -91,7 +93,7 @@ void Game::initPlayer()
 
 	this->gunSoundBuffer.loadFromFile("Textures/sounds/gun.wav");
 	this->gunSound.setBuffer(gunSoundBuffer);
-	this->gunSound.setVolume(55);
+	this->gunSound.setVolume(60);
 }
 
 void Game::initItem()
@@ -122,8 +124,8 @@ Game::Game(sf::RenderWindow* window, Entername* entername)
 	this->initPlayer();
 	this->initItem();
 	this->initEnemies();
-
 	this->entername = entername;
+	
 }
 
 Game::~Game()
@@ -400,8 +402,6 @@ void Game::update()
 	this->updateInput();
 
 	this->player->update();
-
-	//this->updateCollision();
 
 	this->updateBullets();
 

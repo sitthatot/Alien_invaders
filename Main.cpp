@@ -1,3 +1,4 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include "Game.h"
@@ -5,6 +6,7 @@
 #include "Menu.h"
 #include "Highscore.h"
 #include "Entername.h"
+#include "SFML/Audio.hpp"
 #include <vector>
 //using namespace sf;
 
@@ -15,10 +17,24 @@ int main()
 	sf::RenderWindow window(sf::VideoMode(1078, 850), "Invaders");
 	Menu menu(window.getSize().x,window.getSize().y);
 	sf::Texture texture;
+
 	sf::SoundBuffer selectSoundBuffer;
 	sf::Sound selectSound;
 	selectSoundBuffer.loadFromFile("Textures/sounds/select.wav");
 	selectSound.setBuffer(selectSoundBuffer);
+	selectSound.setVolume(70);
+
+	sf::Music stageMusic;
+	stageMusic.openFromFile("Textures/sounds/Jungle.wav");
+	stageMusic.setLoop(true);
+	stageMusic.setVolume(50);
+	
+
+	sf::Music gameOpen;
+	gameOpen.openFromFile("Textures/sounds/title.wav");
+	gameOpen.setLoop(false);
+	gameOpen.setVolume(50);
+	gameOpen.play();
 	if (!texture.loadFromFile("Textures/menu_bg.JPG")) {
 
 	}
@@ -72,7 +88,6 @@ int main()
 						selectSound.play();
 						state = 2;
 						//go to state
-						//highscore.render();
 						break;
 					case 2:
 						window.close();
@@ -98,6 +113,7 @@ int main()
 			break;
 		case 1:
 			selectSound.play();
+			stageMusic.play();
 			game.run();
 			break;
 		case 2:
@@ -117,18 +133,7 @@ int main()
 			textEnter.clear();
 			entername.render();
 			break;
-		}
-
-		
+		}	
 	}
-	
-		
-		//Init srand
-	//srand(time(nullptr));
-		//Init Game engine
-	//Game game;
-	//game.run();
-
-		//End of application
 	return 0;
 }

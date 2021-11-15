@@ -57,27 +57,3 @@ void Entername::render()
 	this->window->draw(this->player);
 	this->window->display();
 }
-
-//void Entername::updateHigh(std::string name, unsigned int score)
-//{
-//	this->fq = fopen("scoreboard/scoreboard.txt", "r");
-//	for (int i = 0; i < 5; i++)
-//	{
-//		fscanf(fq, "%s", &temp);
-//		this->name[i] = temp;
-//		fscanf(fq, "%d", &this->score[i]);
-//		this->userScore.push_back(std::make_pair(this->score[i], this->name[i]));
-//	}
-//	this->name[5] = name;
-//	this->score[5] = score;
-//	this->userScore.push_back(std::make_pair(this->score[5], this->name[5]));
-//	std::sort(this->userScore.begin(), this->userScore.end());
-//	fclose(this->fq);
-//	this->fq = fopen("scoreboard/scoreboard.txt", "w");
-//	for (int i = 5; i >= 1; i--)
-//	{
-//		strcpy(temp, userScore[i].second.c_str());
-//		fprintf(fq, "%s %d\n", temp, userScore[i].first);
-//	}
-//	fclose(this->fq);
-//}

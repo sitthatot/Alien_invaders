@@ -1,3 +1,4 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include "Menu.h"
 
 Menu::Menu(float width, float height)

@@ -27,12 +27,7 @@ private:
 	sf::Text player;
 	sf::Texture backgoundTex;
 	sf::Sprite backgoundSprite;
-	//FILE* fq;
 
-	//char temp[255];
-	//int score[6];
-	//std::string name[6];
-	//std::vector <std::pair<int, std::string>> userScore;
 public:
 	Entername(sf::RenderWindow* window);
 	virtual ~Entername();
@@ -40,7 +35,6 @@ public:
 	inline std::string getPlayerName() { return this->playerName; }
 	void enterName(std::vector<sf::Event> events);
 	void render();
-	//void updateHigh(std::string name, unsigned int score);
 };
 
 #endif // !ENTERNAME_H

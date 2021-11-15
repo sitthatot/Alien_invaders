@@ -1,3 +1,4 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include "Item.h"
 
 Item::Item(sf::Texture* texture, float PosX, float PosY, int type)
