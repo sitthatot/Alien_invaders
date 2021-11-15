@@ -1,5 +1,5 @@
 Tots 1975
 Tot 225
- 130
 Tot 30
-Z 10
+Tot 25
+Tot 20

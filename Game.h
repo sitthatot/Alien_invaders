@@ -82,7 +82,13 @@ private:
 	int type;
 	sf::Vector2f pos;
 	Entername* entername;
-
+	//Sounds
+	sf::SoundBuffer itemSoundBuffer;
+	sf::Sound itemSound;
+	sf::SoundBuffer playerCollideSoundBuffer;
+	sf::Sound playerCollideSound;
+	sf::SoundBuffer gunSoundBuffer;
+	sf::Sound gunSound;
 	//Con Private functions
 	void initWindow();
 	void initTextures();

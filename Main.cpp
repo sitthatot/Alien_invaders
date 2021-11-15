@@ -10,10 +10,15 @@
 
 int main()
 {
+	
 	int state = 0;
 	sf::RenderWindow window(sf::VideoMode(1078, 850), "Invaders");
 	Menu menu(window.getSize().x,window.getSize().y);
 	sf::Texture texture;
+	sf::SoundBuffer selectSoundBuffer;
+	sf::Sound selectSound;
+	selectSoundBuffer.loadFromFile("Textures/sounds/select.wav");
+	selectSound.setBuffer(selectSoundBuffer);
 	if (!texture.loadFromFile("Textures/menu_bg.JPG")) {
 
 	}
@@ -39,10 +44,12 @@ int main()
 				switch (event.key.code)
 				{
 				case sf::Keyboard::Up:
+					selectSound.play();
 					menu.MoveUp();
 					break;
 
 				case sf::Keyboard::Down:
+					selectSound.play();
 					menu.MoveDown();
 					break;
 				case sf::Keyboard::Return:
@@ -51,6 +58,7 @@ int main()
 					case 0:
 						std::cout << "Play";
 						//go to state
+						selectSound.play();
 						if (state == 3) {
 							state = 1;
 							break;
@@ -61,6 +69,7 @@ int main()
 						break;
 					case 1:
 						std::cout << "leader";
+						selectSound.play();
 						state = 2;
 						//go to state
 						//highscore.render();
@@ -88,6 +97,7 @@ int main()
 			window.display();
 			break;
 		case 1:
+			selectSound.play();
 			game.run();
 			break;
 		case 2:

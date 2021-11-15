@@ -36,6 +36,7 @@ void Game::initTextures()
 	this->itemTexture[1].loadFromFile("Textures/shotgun.png");
 }
 
+
 void Game::initGUI()
 {
 	//Load font
@@ -84,6 +85,13 @@ void Game::initPlayer()
 {
 	this->player = new Player();
 	this->player->setPosition(500.f, 350.f);
+	this->playerCollideSoundBuffer.loadFromFile("Textures/sounds/enemy-hit.wav");
+	this->playerCollideSound.setBuffer(this->playerCollideSoundBuffer);
+	this->playerCollideSound.setVolume(40);
+
+	this->gunSoundBuffer.loadFromFile("Textures/sounds/gun.wav");
+	this->gunSound.setBuffer(gunSoundBuffer);
+	this->gunSound.setVolume(55);
 }
 
 void Game::initItem()
@@ -192,6 +200,7 @@ void Game::updateInput()
 
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && this->player->canAttack())
 	{
+		this->gunSound.play();
 		this->bullets.push_back(
 			new Bullet(
 				this->textures["BULLET"],
@@ -222,29 +231,16 @@ void Game::updateGUI()
 
 void Game::updateBullets()
 {
-	//unsigned counter = 0;
-	//for (auto* bullet : this->bullets)
-	//{
-	//	bullet->update();
-
-	//	//Bullet culling (top of screen)
-	//	if (bullet->getBounds().top + bullet->getBounds().height < 0.f)
-	//	{
-	//		//Delete bullet
-	//		delete this->bullets.at(counter);
-	//		this->bullets.erase(this->bullets.begin() + counter);
-	//	}
-
-	//	++counter;
-	//}
 	for (int i = 0; i < bullets.size(); i++)
 	{
 		bullets[i]->update();
+		//Out of screen
 		if (bullets[i]->getBounds().top < 0.f || bullets[i]->getBounds().left < 0.f
 			||bullets[i]->getBounds().left + bullets[i]->getBounds().width >= this->window->getSize().x
 			||bullets[i]->getBounds().top + bullets[i]->getBounds().height >= this->window->getSize().y)
 		{
 			std::cout << "Out";
+			
 			delete this->bullets[i];
 			this->bullets.erase(this->bullets.begin() + i);
 		}
@@ -272,6 +268,7 @@ void Game::updateEnemies()
 		this->enemies.push_back(new Enemy(pos.x, pos.y, &this->enemysprite[this->type], this->type));
 		this->spawnTimer = 0.f;
 	}
+	//ความยากในแต่ละระดับคะแนน
 	if (this->points > 100 && this->points <= 200)
 	{
 		this->spawnTimerMax = 5.f;
@@ -293,6 +290,7 @@ void Game::updateEnemies()
 	unsigned counter = 0;
 	for (int i = 0; i < enemies.size(); i++)
 	{
+		//Enemy เกินขอบจอ
 		this->enemies[i]->update(this->player->getPos());
 		if (this->enemies[i]->getBounds().top > this->window->getSize().y
 			|| this->enemies[i]->getBounds().left < 0)
@@ -305,6 +303,9 @@ void Game::updateEnemies()
 		//Enemy player collision
 		else if (this->enemies[i]->getBounds().intersects(this->player->getBounds()))
 		{
+			
+			this->playerCollideSound.play();
+
 			this->player->loseHp(this->enemies[i]->getDamage());
 			delete this->enemies[i];
 			this->enemies.erase(this->enemies.begin() + i);
@@ -317,7 +318,7 @@ void Game::updateEnemies()
 
 void Game::updateItem()
 {
-	//Spawning
+	//Spawning item
 	this->itemSpawnTimer += 0.5f;
 	if (this->itemSpawnTimer >= this->itemSpawnTimerMax)
 	{
@@ -332,7 +333,7 @@ void Game::updateItem()
 	for (int i = 0; i < items.size(); i++)
 	{
 		this->items[i]->updateItem();
-		//Bullet culling (top of screen)
+		//Item culling (top of screen)
 		if (this->items[i]->deleteItem())
 		{
 			//Delete Item
@@ -343,6 +344,10 @@ void Game::updateItem()
 		//Item player collision
 		else if (this->items[i]->getBounds().intersects(this->player->getBounds()))
 		{
+			this->itemSoundBuffer.loadFromFile("Textures/sounds/1-up.wav");
+			this->itemSound.setBuffer(this->itemSoundBuffer);
+			this->itemSound.setVolume(30);
+			this->itemSound.play();
 			if (this->items[i]->itemType() == 0)
 			{
 				this->player->plusHp(5);
@@ -359,7 +364,7 @@ void Game::updateItem()
 	}
 }
 
-void Game::updateCombat()
+void Game::updateCombat()//กระสุนโดน Enemy
 {
 	for (int i = 0; i < this->enemies.size(); ++i)
 	{
@@ -477,6 +482,7 @@ void Game::render()
 
 	//Game over screen
 	if (this->player->getHp() <= 0) {
+		
 		this->window->draw(this->gameOverText);
 	}
 
